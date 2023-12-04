@@ -1,0 +1,46 @@
+apiVersion: v2
+description: participants-fx-poc Helm chart for Kubernetes
+name: participants-fx-poc
+version: 1.0.0
+appVersion: "ml-testing-toolkit: v17.0.0, ml-testing-toolkit-ui: v15.4.0, sdk-scheme-adapter: v23.1.1"
+home: http://mojaloop.io
+icon: http://mojaloop.io/images/logo.png
+sources:
+  - https://github.com/mojaloop/mojaloop
+  - https://github.com/mojaloop/helm
+  - https://github.com/mojaloop/sdk-scheme-adapter
+maintainers:
+  - name: Vijay Kumar Guthi
+    email: vijaya.guthi@infitx.com
+dependencies:
+  - name: payerfsp
+    repository: "file://./chart-payerfsp"
+    tags:
+      - testing-toolkit
+      - sdk-scheme-adapter
+    version: 1.0.0
+    condition: payerfsp.enabled
+  - name: payeefsp
+    repository: "file://./chart-payeefsp"
+    tags:
+      - testing-toolkit
+      - sdk-scheme-adapter
+    version: 1.0.0
+    condition: payeefsp.enabled
+  - name: fxp
+    repository: "file://./chart-fxp"
+    tags:
+      - testing-toolkit
+      - sdk-scheme-adapter
+    version: 1.0.0
+    condition: fxp.enabled
+  - name: redis
+    condition: redis.enabled
+    repository: https://charts.bitnami.com/bitnami
+    tags:
+      - mojaloop
+      - dependency
+      - backend
+      - redis
+      - sdk
+    version: 17.3.7

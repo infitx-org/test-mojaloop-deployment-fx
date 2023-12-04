@@ -1,0 +1,180 @@
+# This is a YAML-formatted file.
+
+global:
+  redis:
+    host: fx-redis-master
+    port: 6379
+
+
+## Local re-usable configs
+config:
+  payerName: &CONFIG_PAYER_NAME payerfsp
+  payeeName: &CONFIG_PAYEE_NAME payeefsp
+  fxpName: &CONFIG_FXP_NAME fxp
+  endpointALS: &ENDPOINT_ALS 'http://als:3000'
+  endpointQuotes: &ENDPOINT_QUOTES 'http://quotes:3000'
+  endpointTransfers: &ENDPOINT_TRANSFERS 'http://transfers:3000'
+
+redis:
+  enabled: true
+
+  replica:
+    replicaCount: 1
+
+  ## @param architecture Redis&reg; architecture. Allowed values: `standalone` or `replication`
+  ##
+  architecture: standalone
+
+  ## Redis&reg; Authentication parameters
+  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/redis#setting-the-server-password-on-first-run
+  ##
+  auth:
+    ## @param auth.enabled Enable password authentication
+    ##
+    enabled: false
+
+  ## @section Persistence parameters
+  ##
+  master:
+    ## Enable persistence using Persistent Volume Claims
+    ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+    persistence:
+      ## @param master.persistence.enabled Enable persistence on Redis&reg; master nodes using Persistent Volume Claims
+      ##
+      enabled: false
+
+payerfsp:
+  enabled: true
+
+  config:
+    simName: *CONFIG_PAYER_NAME
+    database: &CONFIG_PAYER_DB 1
+
+  sdk-scheme-adapter:
+    sdk-scheme-adapter-api-svc:
+      redis:
+        database: *CONFIG_PAYER_DB
+
+      config:
+        simName: *CONFIG_PAYER_NAME
+      
+      env:
+        BACKEND_ENDPOINT: '{{ .Release.Name }}-{{ .Values.config.simName }}-ttk-backend:4040'
+        GET_SERVICES_FXP_RESPONSE: *CONFIG_FXP_NAME
+        ALS_ENDPOINT: *ENDPOINT_ALS
+        QUOTES_ENDPOINT: *ENDPOINT_QUOTES
+        TRANSFERS_ENDPOINT: *ENDPOINT_TRANSFERS
+        FX_QUOTES_ENDPOINT: '{{ .Release.Name }}-fxp-sdk-api-svc:4000'
+        FX_TRANSFERS_ENDPOINT: *ENDPOINT_TRANSFERS
+
+  ml-testing-toolkit:
+    enabled: true
+
+    ml-testing-toolkit-backend:
+      ingress:
+        enabled: true
+        hosts:
+          specApi:
+            host: 'ttk-specapi.payerfsp.local'
+          adminApi:
+            host: 'ttk.payerfsp.local'
+
+    ml-testing-toolkit-frontend:
+      ingress:
+        enabled: true
+        hosts:
+          ui:
+            host: ttk.payerfsp.local
+
+      config:
+        API_BASE_URL: 'http://ttk.payerfsp.local'
+
+payeefsp:
+  enabled: true
+
+  ## Local re-usable configs
+  config:
+    simName: *CONFIG_PAYEE_NAME
+    database: &CONFIG_PAYEE_DB 2
+
+  sdk-scheme-adapter:
+    sdk-scheme-adapter-api-svc:
+
+      redis:
+        database: *CONFIG_PAYEE_DB
+
+      config:
+        simName: *CONFIG_PAYEE_NAME
+
+      env:
+        BACKEND_ENDPOINT: '{{ .Release.Name }}-{{ .Values.config.simName }}-ttk-backend:4040'
+        SUPPORTED_CURRENCIES: TZS
+        ALS_ENDPOINT: *ENDPOINT_ALS
+        QUOTES_ENDPOINT: *ENDPOINT_QUOTES
+        TRANSFERS_ENDPOINT: *ENDPOINT_TRANSFERS
+
+  ml-testing-toolkit:
+    enabled: true
+
+    ml-testing-toolkit-backend:
+      ingress:
+        enabled: true
+        hosts:
+          specApi:
+            host: 'ttk-specapi.payeefsp.local'
+          adminApi:
+            host: 'ttk.payeefsp.local'
+
+    ml-testing-toolkit-frontend:
+      ingress:
+        enabled: true
+        hosts:
+          ui:
+            host: 'ttk.payeefsp.local'
+
+      config:
+        API_BASE_URL: 'http://ttk.payeefsp.local'
+
+fxp:
+  enabled: true
+
+  ## Local re-usable configs
+  config:
+    simName: *CONFIG_FXP_NAME
+    database: &CONFIG_FXP_DB 5
+
+  sdk-scheme-adapter:
+    sdk-scheme-adapter-api-svc:
+
+      redis:
+        database: *CONFIG_FXP_DB
+
+      config:
+        simName: *CONFIG_FXP_NAME
+
+      env:
+        BACKEND_ENDPOINT: '{{ .Release.Name }}-{{ .Values.config.simName }}-ttk-backend:4040'
+        FX_QUOTES_ENDPOINT: '{{ .Release.Name }}-payerfsp-sdk-api-svc:4000'
+        FX_TRANSFERS_ENDPOINT: *ENDPOINT_TRANSFERS
+
+  ml-testing-toolkit:
+    enabled: true
+
+    ml-testing-toolkit-backend:
+      ingress:
+        enabled: true
+        hosts:
+          specApi:
+            host: 'ttk-specapi.fxp.local'
+          adminApi:
+            host: 'ttk.fxp.local'
+
+    ml-testing-toolkit-frontend:
+      ingress:
+        enabled: true
+        hosts:
+          ui:
+            host: 'ttk.fxp.local'
+
+      config:
+        API_BASE_URL: 'http://ttk.fxp.local'
