@@ -5,12 +5,12 @@ sdk-scheme-adapter:
 
   ## Local re-usable configs
   config:
-    simName: &CONFIG_PAYER_NAME payerdfsp
+    simName: &CONFIG_PAYER_NAME fxpayerdfsp
     database: &CONFIG_PAYER_DB 1
 
   sdk-scheme-adapter-api-svc:
     enabled: true
-    nameOverride: 'payerdfsp-sdk-api-svc'
+    nameOverride: 'fxpayerdfsp-sdk-api-svc'
 
     redis:
       database: *CONFIG_PAYER_DB # This is a number between 0 to 15
@@ -30,7 +30,7 @@ sdk-scheme-adapter:
       apiVersion:
       ## @param ingress.hostname Default host for the ingress record
       ##
-      hostname: payerdfsp-sdk-scheme-adapter.local
+      hostname: fxpayerdfsp-sdk-scheme-adapter.local
       ## @param ingress.path Default path for the ingress record
       ## NOTE: You may need to set this to '/*' in order to use this with ALB ingress controllers
       ##
@@ -176,7 +176,7 @@ ml-testing-toolkit:
 
   ml-testing-toolkit-backend:
     enabled: true
-    nameOverride: 'payerdfsp-ttk-backend'
+    nameOverride: 'fxpayerdfsp-ttk-backend'
 
     config_files:
       user_config.json:
@@ -220,7 +220,7 @@ ml-testing-toolkit:
 
   ml-testing-toolkit-frontend:
     enabled: true
-    nameOverride: 'payerdfsp-ttk-frontend'
+    nameOverride: 'fxpayerdfsp-ttk-frontend'
   #   ingress:
   #     enabled: true
   #     hosts:

@@ -4,7 +4,10 @@
 config:
   payerName: &CONFIG_PAYER_NAME fxpayerdfsp
   payeeName: &CONFIG_PAYEE_NAME fxpayeedfsp
-  fxpName: &CONFIG_FXP_NAME fxfxp
+  fxpName: &CONFIG_FXP_NAME testfxp1
+  payerServiceName: &CONFIG_PAYER_SERVICE_NAME fxpayerdfsp
+  payeeServiceName: &CONFIG_PAYEE_SERVICE_NAME fxpayeedfsp
+  fxpServiceName: &CONFIG_FXP_SERVICE_NAME fxp
   endpointALS: &ENDPOINT_ALS 'moja-account-lookup-service'
   endpointQuotes: &ENDPOINT_QUOTES 'moja-quoting-service'
   endpointTransfers: &ENDPOINT_TRANSFERS 'moja-ml-api-adapter-service'
@@ -40,11 +43,11 @@ redis:
       ##
       enabled: false
 
-payerdfsp:
+fxpayerdfsp:
   enabled: true
 
   config:
-    simName: *CONFIG_PAYER_NAME
+    simName: *CONFIG_PAYER_SERVICE_NAME
     database: &CONFIG_PAYER_DB 1
 
   sdk-scheme-adapter:
@@ -57,11 +60,12 @@ payerdfsp:
         port: *REDIS_PORT
 
       config:
-        simName: *CONFIG_PAYER_NAME
+        simName: *CONFIG_PAYER_SERVICE_NAME
       
       env:
+        DFSP_ID: *CONFIG_PAYER_NAME
         BACKEND_ENDPOINT: '{{ .Release.Name }}-{{ .Values.config.simName }}-ttk-backend:4040'
-        GET_SERVICES_FXP_RESPONSE: *CONFIG_FXP_NAME
+        GET_SERVICES_FXP_RESPONSE: *CONFIG_FXP_SERVICE_NAME
         ALS_ENDPOINT: *ENDPOINT_ALS
         QUOTES_ENDPOINT: *ENDPOINT_QUOTES
         TRANSFERS_ENDPOINT: *ENDPOINT_TRANSFERS
@@ -76,26 +80,26 @@ payerdfsp:
         enabled: true
         hosts:
           specApi:
-            host: 'ttk-specapi.payerdfsp.local'
+            host: 'ttk-specapi.fxpayerdfsp.local'
           adminApi:
-            host: 'ttk.payerdfsp.local'
+            host: 'ttk.fxpayerdfsp.local'
 
     ml-testing-toolkit-frontend:
       ingress:
         enabled: true
         hosts:
           ui:
-            host: ttk.payerdfsp.local
+            host: ttk.fxpayerdfsp.local
 
       config:
-        API_BASE_URL: 'http://ttk.payerdfsp.local'
+        API_BASE_URL: 'http://ttk.fxpayerdfsp.local'
 
-payeedfsp:
+fxpayeedfsp:
   enabled: true
 
   ## Local re-usable configs
   config:
-    simName: *CONFIG_PAYEE_NAME
+    simName: *CONFIG_PAYEE_SERVICE_NAME
     database: &CONFIG_PAYEE_DB 2
 
   sdk-scheme-adapter:
@@ -109,9 +113,10 @@ payeedfsp:
         port: *REDIS_PORT
 
       config:
-        simName: *CONFIG_PAYEE_NAME
+        simName: *CONFIG_PAYEE_SERVICE_NAME
 
       env:
+        DFSP_ID: *CONFIG_PAYEE_NAME
         BACKEND_ENDPOINT: '{{ .Release.Name }}-{{ .Values.config.simName }}-ttk-backend:4040'
         SUPPORTED_CURRENCIES: TZS
         ALS_ENDPOINT: *ENDPOINT_ALS
@@ -126,26 +131,26 @@ payeedfsp:
         enabled: true
         hosts:
           specApi:
-            host: 'ttk-specapi.payeedfsp.local'
+            host: 'ttk-specapi.fxpayeedfsp.local'
           adminApi:
-            host: 'ttk.payeedfsp.local'
+            host: 'ttk.fxpayeedfsp.local'
 
     ml-testing-toolkit-frontend:
       ingress:
         enabled: true
         hosts:
           ui:
-            host: 'ttk.payeedfsp.local'
+            host: 'ttk.fxpayeedfsp.local'
 
       config:
-        API_BASE_URL: 'http://ttk.payeedfsp.local'
+        API_BASE_URL: 'http://ttk.fxpayeedfsp.local'
 
 fxp:
   enabled: true
 
   ## Local re-usable configs
   config:
-    simName: *CONFIG_FXP_NAME
+    simName: *CONFIG_FXP_SERVICE_NAME
     database: &CONFIG_FXP_DB 5
 
   sdk-scheme-adapter:
@@ -159,9 +164,10 @@ fxp:
         port: *REDIS_PORT
 
       config:
-        simName: *CONFIG_FXP_NAME
+        simName: *CONFIG_FXP_SERVICE_NAME
 
       env:
+        DFSP_ID: *CONFIG_FXP_NAME
         BACKEND_ENDPOINT: '{{ .Release.Name }}-{{ .Values.config.simName }}-ttk-backend:4040'
         FX_QUOTES_ENDPOINT: '{{ .Release.Name }}-fxpayerdfsp-sdk-api-svc:4000'
         FX_TRANSFERS_ENDPOINT: *ENDPOINT_TRANSFERS

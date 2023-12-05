@@ -5,12 +5,12 @@ sdk-scheme-adapter:
 
   ## Local re-usable configs
   config:
-    simName: &CONFIG_PAYEE_NAME payeedfsp
+    simName: &CONFIG_PAYEE_NAME fxpayeedfsp
     database: &CONFIG_PAYEE_DB 2
 
   sdk-scheme-adapter-api-svc:
     enabled: true
-    nameOverride: 'payeedfsp-sdk-api-svc'
+    nameOverride: 'fxpayeedfsp-sdk-api-svc'
 
     redis:
       database: *CONFIG_PAYEE_DB # This is a number between 0 to 15
@@ -30,7 +30,7 @@ sdk-scheme-adapter:
       apiVersion:
       ## @param ingress.hostname Default host for the ingress record
       ##
-      hostname: payeedfsp-sdk-scheme-adapter.local
+      hostname: fxpayeedfsp-sdk-scheme-adapter.local
       ## @param ingress.path Default path for the ingress record
       ## NOTE: You may need to set this to '/*' in order to use this with ALB ingress controllers
       ##
@@ -175,7 +175,7 @@ ml-testing-toolkit:
 
   ml-testing-toolkit-backend:
     enabled: true
-    nameOverride: 'payeedfsp-ttk-backend'
+    nameOverride: 'fxpayeedfsp-ttk-backend'
 
     config_files:
       user_config.json:
@@ -191,149 +191,148 @@ ml-testing-toolkit:
           }
         ]
       }
-      rules_response__default.json: |-
-        [
-          {
-            "ruleId": 8,
-            "priority": 1,
-            "description": "get /parties/{idType}/{idValue}",
-            "apiVersion": {
-              "minorVersion": 1,
-              "majorVersion": 2,
-              "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
-              "asynchronous": false
-            },
-            "conditions": {
-              "all": [
-                {
-                  "fact": "operationPath",
-                  "operator": "equal",
-                  "value": "/parties/{idType}/{idValue}"
-                },
-                {
-                  "fact": "method",
-                  "operator": "equal",
-                  "value": "get"
-                }
-              ]
-            },
-            "event": {
-              "method": null,
-              "path": null,
-              "params": {
-                "body": {
-                  "dateOfBirth": "1966-06-16",
-                  "displayName": "Yaro",
-                  "firstName": "Yaro",
-                  "fspId": "fxpayeedfsp",
-                  "idType": "MSISDN",
-                  "idValue": "{$request.params.idValue}",
-                  "lastName": "Smith",
-                  "merchantClassificationCode": "1234",
-                  "middleName": "",
-                  "kycInformation": "This is encrypted KYC information"
-                },
-                "statusCode": "200",
-                "scripts": {
-                  "scriptingEngine": "postman"
-                }
-              },
-              "type": "FIXED_RESPONSE"
-            },
-            "type": "response",
-            "version": 1
+      rules_response__default.json: [
+        {
+          "ruleId": 8,
+          "priority": 1,
+          "description": "get /parties/{idType}/{idValue}",
+          "apiVersion": {
+            "minorVersion": 1,
+            "majorVersion": 2,
+            "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
+            "asynchronous": false
           },
-          {
-            "ruleId": 9,
-            "priority": 1,
-            "description": "post /quoterequests",
-            "apiVersion": {
-              "minorVersion": 1,
-              "majorVersion": 2,
-              "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
-              "asynchronous": false
-            },
-            "conditions": {
-              "all": [
-                {
-                  "fact": "operationPath",
-                  "operator": "equal",
-                  "value": "/quoterequests"
-                },
-                {
-                  "fact": "method",
-                  "operator": "equal",
-                  "value": "post"
-                }
-              ]
-            },
-            "event": {
-              "method": null,
-              "path": null,
-              "params": {
-                "body": {
-                  "quoteId": "{$request.body.quoteId}",
-                  "transactionId": "{$request.body.transactionId}",
-                  "transferAmount": "{$request.body.amount}",
-                  "transferAmountCurrency": "{$request.body.currency}"
-                },
-                "statusCode": "200",
-                "scripts": {
-                  "scriptingEngine": "postman"
-                }
+          "conditions": {
+            "all": [
+              {
+                "fact": "operationPath",
+                "operator": "equal",
+                "value": "/parties/{idType}/{idValue}"
               },
-              "type": "FIXED_RESPONSE"
-            },
-            "type": "response",
-            "version": 1
+              {
+                "fact": "method",
+                "operator": "equal",
+                "value": "get"
+              }
+            ]
           },
-          {
-            "ruleId": 10,
-            "priority": 1,
-            "description": "post /transfers",
-            "apiVersion": {
-              "minorVersion": 1,
-              "majorVersion": 2,
-              "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
-              "asynchronous": false
-            },
-            "conditions": {
-              "all": [
-                {
-                  "fact": "operationPath",
-                  "operator": "equal",
-                  "value": "/transfers"
-                },
-                {
-                  "fact": "method",
-                  "operator": "equal",
-                  "value": "post"
-                }
-              ]
-            },
-            "event": {
-              "method": null,
-              "path": null,
-              "params": {
-                "body": {
-                  "completedTimestamp": "{$environment.completedTimestamp}",
-                  "homeTransactionId": "123",
-                  "transferState": "COMMITTED"
-                },
-                "statusCode": "200",
-                "scripts": {
-                  "exec": [
-                    "environment.completedTimestamp = new Date().toISOString()"
-                  ],
-                  "scriptingEngine": "javascript"
-                }
+          "event": {
+            "method": null,
+            "path": null,
+            "params": {
+              "body": {
+                "dateOfBirth": "1966-06-16",
+                "displayName": "Yaro",
+                "firstName": "Yaro",
+                "fspId": "fxpayeedfsp",
+                "idType": "MSISDN",
+                "idValue": "{$request.params.idValue}",
+                "lastName": "Smith",
+                "merchantClassificationCode": "1234",
+                "middleName": "",
+                "kycInformation": "This is encrypted KYC information"
               },
-              "type": "FIXED_RESPONSE"
+              "statusCode": "200",
+              "scripts": {
+                "scriptingEngine": "postman"
+              }
             },
-            "type": "response",
-            "version": 1
-          }
-        ]
+            "type": "FIXED_RESPONSE"
+          },
+          "type": "response",
+          "version": 1
+        },
+        {
+          "ruleId": 9,
+          "priority": 1,
+          "description": "post /quoterequests",
+          "apiVersion": {
+            "minorVersion": 1,
+            "majorVersion": 2,
+            "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
+            "asynchronous": false
+          },
+          "conditions": {
+            "all": [
+              {
+                "fact": "operationPath",
+                "operator": "equal",
+                "value": "/quoterequests"
+              },
+              {
+                "fact": "method",
+                "operator": "equal",
+                "value": "post"
+              }
+            ]
+          },
+          "event": {
+            "method": null,
+            "path": null,
+            "params": {
+              "body": {
+                "quoteId": "{$request.body.quoteId}",
+                "transactionId": "{$request.body.transactionId}",
+                "transferAmount": "{$request.body.amount}",
+                "transferAmountCurrency": "{$request.body.currency}"
+              },
+              "statusCode": "200",
+              "scripts": {
+                "scriptingEngine": "postman"
+              }
+            },
+            "type": "FIXED_RESPONSE"
+          },
+          "type": "response",
+          "version": 1
+        },
+        {
+          "ruleId": 10,
+          "priority": 1,
+          "description": "post /transfers",
+          "apiVersion": {
+            "minorVersion": 1,
+            "majorVersion": 2,
+            "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
+            "asynchronous": false
+          },
+          "conditions": {
+            "all": [
+              {
+                "fact": "operationPath",
+                "operator": "equal",
+                "value": "/transfers"
+              },
+              {
+                "fact": "method",
+                "operator": "equal",
+                "value": "post"
+              }
+            ]
+          },
+          "event": {
+            "method": null,
+            "path": null,
+            "params": {
+              "body": {
+                "completedTimestamp": "{$environment.completedTimestamp}",
+                "homeTransactionId": "123",
+                "transferState": "COMMITTED"
+              },
+              "statusCode": "200",
+              "scripts": {
+                "exec": [
+                  "environment.completedTimestamp = new Date().toISOString()"
+                ],
+                "scriptingEngine": "javascript"
+              }
+            },
+            "type": "FIXED_RESPONSE"
+          },
+          "type": "response",
+          "version": 1
+        }
+      ]
       api_definitions__sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets_2.1__api_spec.yaml: 'https://raw.githubusercontent.com/mojaloop/api-snippets/feat/add-fx-to-sdk/docs/sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets.yaml'
 
   initContainers: []
@@ -354,7 +353,7 @@ ml-testing-toolkit:
 
   ml-testing-toolkit-frontend:
     enabled: true
-    nameOverride: 'payeedfsp-ttk-frontend'
+    nameOverride: 'fxpayeedfsp-ttk-frontend'
   #   ingress:
   #     enabled: true
   #     hosts:

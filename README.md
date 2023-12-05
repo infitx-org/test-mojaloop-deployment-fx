@@ -87,11 +87,14 @@ TBD
   ```
 - Add following hostnames to `/etc/hosts`
   ```
-  127.0.0.1 ttk.fxp.local ttk.payerdfsp.local ttk.payeedfsp.local
+  127.0.0.1 ttk.fxp.local ttk.fxpayerdfsp.local ttk.fxpayeedfsp.local
   ```
 
 ### Onboard new participants
 - Access TTK using this link http://testing-toolkit.local/admin/index
 - Load collection `ttk-testcases/onboarding` and environment `ttk-testcases/default-env.json`
 - Run test collection
-- 
+
+### Make a transfer
+- Open http://ttk.fxpayerdfsp.local/admin/outbound_request
+- Load test case `ttk-testcases/tests/transfer.json`

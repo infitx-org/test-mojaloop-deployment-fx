@@ -13,20 +13,20 @@ maintainers:
   - name: Vijay Kumar Guthi
     email: vijaya.guthi@infitx.com
 dependencies:
-  - name: payerdfsp
+  - name: fxpayerdfsp
     repository: "file://./chart-fxpayerdfsp"
     tags:
       - testing-toolkit
       - sdk-scheme-adapter
     version: 1.0.0
-    condition: payerdfsp.enabled
-  - name: payeedfsp
+    condition: fxpayerdfsp.enabled
+  - name: fxpayeedfsp
     repository: "file://./chart-fxpayeedfsp"
     tags:
       - testing-toolkit
       - sdk-scheme-adapter
     version: 1.0.0
-    condition: payeedfsp.enabled
+    condition: fxpayeedfsp.enabled
   - name: fxp
     repository: "file://./chart-fxp"
     tags:
