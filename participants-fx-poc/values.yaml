@@ -1,19 +1,16 @@
 # This is a YAML-formatted file.
 
-global:
-  redis:
-    host: fx-redis-master
-    port: 6379
-
-
 ## Local re-usable configs
 config:
-  payerName: &CONFIG_PAYER_NAME payerfsp
-  payeeName: &CONFIG_PAYEE_NAME payeefsp
-  fxpName: &CONFIG_FXP_NAME fxp
-  endpointALS: &ENDPOINT_ALS 'http://als:3000'
-  endpointQuotes: &ENDPOINT_QUOTES 'http://quotes:3000'
-  endpointTransfers: &ENDPOINT_TRANSFERS 'http://transfers:3000'
+  payerName: &CONFIG_PAYER_NAME fxpayerfsp
+  payeeName: &CONFIG_PAYEE_NAME fxpayeefsp
+  fxpName: &CONFIG_FXP_NAME fxfxp
+  endpointALS: &ENDPOINT_ALS 'http://moja-account-lookup-service'
+  endpointQuotes: &ENDPOINT_QUOTES 'http://moja-quoting-service'
+  endpointTransfers: &ENDPOINT_TRANSFERS 'http://moja-ml-api-adapter-service'
+  redisHost: &REDIS_HOST 'fx-redis-master'
+  redisPort: &REDIS_PORT 6379
+  mojaloopConnectorImageTag: &MOJALOOP_CONNECTOR_IMAGE_TAG v23.2.0-snapshot.2
 
 redis:
   enabled: true
@@ -52,8 +49,12 @@ payerfsp:
 
   sdk-scheme-adapter:
     sdk-scheme-adapter-api-svc:
+      image:
+        tag: *MOJALOOP_CONNECTOR_IMAGE_TAG
       redis:
         database: *CONFIG_PAYER_DB
+        host: *REDIS_HOST
+        port: *REDIS_PORT
 
       config:
         simName: *CONFIG_PAYER_NAME
@@ -99,9 +100,13 @@ payeefsp:
 
   sdk-scheme-adapter:
     sdk-scheme-adapter-api-svc:
+      image:
+        tag: *MOJALOOP_CONNECTOR_IMAGE_TAG
 
       redis:
         database: *CONFIG_PAYEE_DB
+        host: *REDIS_HOST
+        port: *REDIS_PORT
 
       config:
         simName: *CONFIG_PAYEE_NAME
@@ -145,9 +150,13 @@ fxp:
 
   sdk-scheme-adapter:
     sdk-scheme-adapter-api-svc:
+      image:
+        tag: *MOJALOOP_CONNECTOR_IMAGE_TAG
 
       redis:
         database: *CONFIG_FXP_DB
+        host: *REDIS_HOST
+        port: *REDIS_PORT
 
       config:
         simName: *CONFIG_FXP_NAME
