@@ -2,12 +2,12 @@
 
 ## Local re-usable configs
 config:
-  payerName: &CONFIG_PAYER_NAME fxpayerfsp
-  payeeName: &CONFIG_PAYEE_NAME fxpayeefsp
+  payerName: &CONFIG_PAYER_NAME fxpayerdfsp
+  payeeName: &CONFIG_PAYEE_NAME fxpayeedfsp
   fxpName: &CONFIG_FXP_NAME fxfxp
-  endpointALS: &ENDPOINT_ALS 'http://moja-account-lookup-service'
-  endpointQuotes: &ENDPOINT_QUOTES 'http://moja-quoting-service'
-  endpointTransfers: &ENDPOINT_TRANSFERS 'http://moja-ml-api-adapter-service'
+  endpointALS: &ENDPOINT_ALS 'moja-account-lookup-service'
+  endpointQuotes: &ENDPOINT_QUOTES 'moja-quoting-service'
+  endpointTransfers: &ENDPOINT_TRANSFERS 'moja-ml-api-adapter-service'
   redisHost: &REDIS_HOST 'fx-redis-master'
   redisPort: &REDIS_PORT 6379
   mojaloopConnectorImageTag: &MOJALOOP_CONNECTOR_IMAGE_TAG v23.2.0-snapshot.2
@@ -40,7 +40,7 @@ redis:
       ##
       enabled: false
 
-payerfsp:
+payerdfsp:
   enabled: true
 
   config:
@@ -76,21 +76,21 @@ payerfsp:
         enabled: true
         hosts:
           specApi:
-            host: 'ttk-specapi.payerfsp.local'
+            host: 'ttk-specapi.payerdfsp.local'
           adminApi:
-            host: 'ttk.payerfsp.local'
+            host: 'ttk.payerdfsp.local'
 
     ml-testing-toolkit-frontend:
       ingress:
         enabled: true
         hosts:
           ui:
-            host: ttk.payerfsp.local
+            host: ttk.payerdfsp.local
 
       config:
-        API_BASE_URL: 'http://ttk.payerfsp.local'
+        API_BASE_URL: 'http://ttk.payerdfsp.local'
 
-payeefsp:
+payeedfsp:
   enabled: true
 
   ## Local re-usable configs
@@ -126,19 +126,19 @@ payeefsp:
         enabled: true
         hosts:
           specApi:
-            host: 'ttk-specapi.payeefsp.local'
+            host: 'ttk-specapi.payeedfsp.local'
           adminApi:
-            host: 'ttk.payeefsp.local'
+            host: 'ttk.payeedfsp.local'
 
     ml-testing-toolkit-frontend:
       ingress:
         enabled: true
         hosts:
           ui:
-            host: 'ttk.payeefsp.local'
+            host: 'ttk.payeedfsp.local'
 
       config:
-        API_BASE_URL: 'http://ttk.payeefsp.local'
+        API_BASE_URL: 'http://ttk.payeedfsp.local'
 
 fxp:
   enabled: true
@@ -163,7 +163,7 @@ fxp:
 
       env:
         BACKEND_ENDPOINT: '{{ .Release.Name }}-{{ .Values.config.simName }}-ttk-backend:4040'
-        FX_QUOTES_ENDPOINT: '{{ .Release.Name }}-payerfsp-sdk-api-svc:4000'
+        FX_QUOTES_ENDPOINT: '{{ .Release.Name }}-fxpayerdfsp-sdk-api-svc:4000'
         FX_TRANSFERS_ENDPOINT: *ENDPOINT_TRANSFERS
 
   ml-testing-toolkit:

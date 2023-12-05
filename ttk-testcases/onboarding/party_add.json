@@ -1,0 +1,62 @@
+{
+  "options": {},
+  "name": "ttk-testcases_onboarding_party_add",
+  "test_cases": [
+    {
+      "id": 1,
+      "name": "Add Party to ALS",
+      "fileInfo": {
+        "path": "ttk-testcases/onboarding/party_add.json"
+      },
+      "meta": {
+        "info": "Add Party to ALS"
+      },
+      "requests": [
+        {
+          "id": 1,
+          "description": "Add Participant to ALS",
+          "apiVersion": {
+            "minorVersion": 1,
+            "majorVersion": 1,
+            "type": "fspiop",
+            "asynchronous": true,
+            "specFile": "spec_files/api_definitions/fspiop_1.1/api_spec.yaml",
+            "callbackMapFile": "spec_files/api_definitions/fspiop_1.1/callback_map.json",
+            "responseMapFile": "spec_files/api_definitions/fspiop_1.1/response_map.json",
+            "jsfRefFile": "spec_files/api_definitions/fspiop_1.1/mockRef.json",
+            "triggerTemplatesFolder": "spec_files/api_definitions/fspiop_1.1/trigger_templates"
+          },
+          "operationPath": "/participants/{Type}/{ID}",
+          "path": "/participants/MSISDN/{$inputs.FX_DESTINATION_PARTY_ID_1}",
+          "method": "post",
+          "params": {
+            "Type": "MSISDN",
+            "ID": "{$inputs.FX_DESTINATION_PARTY_ID_1}"
+          },
+          "body": {
+            "fspId": "{$inputs.FX_PAYEEDFSP_ID}"
+          },
+          "url": "{$inputs.HOST_ACCOUNT_LOOKUP_SERVICE}",
+          "headers": {
+            "FSPIOP-Source": "{$inputs.FX_PAYEEDFSP_ID}",
+            "Accept": "{$inputs.acceptParticipants}",
+            "Content-Type": "{$inputs.contentTypeParticipants}",
+            "Date": "{$function.generic.curDate}"
+          },
+          "tests": {
+            "assertions": [
+              {
+                "id": 1,
+                "description": "Response status to be 202",
+                "exec": [
+                  "expect(response.status).to.equal(202)"
+                ]
+              }
+            ]
+          },
+          "ignoreCallbacks": true
+        }
+      ]
+    }
+  ]
+}

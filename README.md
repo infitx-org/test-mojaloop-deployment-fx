@@ -64,6 +64,10 @@ https://docs.mojaloop.io/legacy/deployment-guide/local-setup-linux.html
   ```
   helm -n demo test moja
   ```
+- Add the following hostnames to `/etc/hosts` file
+```
+TBD
+```
 
 ### Customize mojaloop values file for FX functionality
 
@@ -71,7 +75,7 @@ https://docs.mojaloop.io/legacy/deployment-guide/local-setup-linux.html
 - Change central-ledger version from `v17.3.2` to `v17.4.0-snapshot.10`
 - Upgrade mojaloop with new values file
   ```
-  helm --namespace demo upgrade moja mojaloop/mojaloop --version 15.2.0 -f ~/Work/mojaloop/test-mojaloop-deployment-fx/values-mojaloop.yaml
+  helm --namespace demo upgrade moja mojaloop/mojaloop --version 15.2.0 -f ./test-mojaloop-deployment-fx/values-mojaloop.yaml
   ```
 
 ### Deploy FX participants
@@ -81,3 +85,13 @@ https://docs.mojaloop.io/legacy/deployment-guide/local-setup-linux.html
   sh build.sh
   helm --namespace demo install fx .
   ```
+- Add following hostnames to `/etc/hosts`
+  ```
+  127.0.0.1 ttk.fxp.local ttk.payerdfsp.local ttk.payeedfsp.local
+  ```
+
+### Onboard new participants
+- Access TTK using this link http://testing-toolkit.local/admin/index
+- Load collection `ttk-testcases/onboarding` and environment `ttk-testcases/default-env.json`
+- Run test collection
+- 

@@ -183,26 +183,139 @@ ml-testing-toolkit:
       system_config.json: {
         "API_DEFINITIONS": [
           {
-            "type": "mojaloop_simulator_inbound",
-            "version": "1.4",
-            "folderPath": "mojaloop_simulator_sim_1.4",
-            "asynchronous": true
-          },
-          {
-            "type": "scheme_adapter_outbound",
-            "version": "1.0",
-            "folderPath": "mojaloop_sdk_outbound_scheme_adapter_1.0",
+            "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
+            "version": "2.1",
+            "folderPath": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets_2.1",
             "hostnames": [],
-            "prefix": "/sdk-out",
-            "asynchronous": true
+            "asynchronous": false
           }
         ]
       }
-      rules_response__default.json: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.0.1/test/func/config/ttk-fxp/spec_files/rules_response/default.json'
-      api_definitions__mojaloop_simulator_sim_1.4__api_spec.yaml: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.0.1/test/func/config/ttk-fxp/spec_files/api_definitions/mojaloop_simulator_sim_1.4/api_spec.yaml'
-      api_definitions__mojaloop_simulator_sim_1.4__response_map.json: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.0.1/test/func/config/ttk-fxp/spec_files/api_definitions/mojaloop_simulator_sim_1.4/response_map.json'
-      api_definitions__mojaloop_sdk_outbound_scheme_adapter_1.0__api_spec.yaml: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.0.1/test/func/config/ttk-fxp/spec_files/api_definitions/mojaloop_sdk_outbound_scheme_adapter_1.0/api_spec.yaml'
-      api_definitions__mojaloop_sdk_outbound_scheme_adapter_1.0__callback_map.json: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.0.1/test/func/config/ttk-fxp/spec_files/api_definitions/mojaloop_sdk_outbound_scheme_adapter_1.0/callback_map.json'
+      rules_response__default.json: |-
+        [
+          {
+              "ruleId": 6,
+              "priority": 1,
+              "description": "FXP - post /fxQuotes",
+              "apiVersion": {
+                "minorVersion": 1,
+                "majorVersion": 2,
+                "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
+                "asynchronous": false
+              },
+              "conditions": {
+                "all": [
+                  {
+                    "fact": "operationPath",
+                    "operator": "equal",
+                    "value": "/fxQuotes"
+                  },
+                  {
+                    "fact": "method",
+                    "operator": "equal",
+                    "value": "post"
+                  }
+                ]
+              },
+              "event": {
+                "method": null,
+                "path": null,
+                "params": {
+                  "body": {
+                    "homeTransactionId": "homeTransactionId-123",
+                    "conversionTerms": {
+                      "conversionId": "{$request.body.conversionTerms.conversionId}",
+                      "determiningTransferId": "b51ec534-ee48-4575-b6a9-ead2955b8069",
+                      "initiatingFsp": "{$request.body.conversionTerms.initiatingFsp}",
+                      "counterPartyFsp": "{$request.body.conversionTerms.counterPartyFsp}",
+                      "amountType": "SEND",
+                      "sourceAmount": {
+                        "currency": "{$request.body.conversionTerms.sourceAmount.currency}",
+                        "amount": "{$environment.sourceAmountValue}"
+                      },
+                      "targetAmount": {
+                        "currency": "{$request.body.conversionTerms.targetAmount.currency}",
+                        "amount": "{$environment.targetAmountValue}"
+                      },
+                      "expiration": "{$request.body.conversionTerms.expiration}",
+                      "charges": [
+                        {
+                          "chargeType": "string",
+                          "sourceAmount": {
+                            "currency": "{$request.body.conversionTerms.sourceAmount.currency}",
+                            "amount": "33"
+                          },
+                          "targetAmount": {
+                            "currency": "{$request.body.conversionTerms.targetAmount.currency}",
+                            "amount": "6000"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "statusCode": "200",
+                  "scripts": {
+                    "exec": [
+                      "const fxQuoteBody = JSON.parse(request.body)",
+                      "environment.sourceAmountValue = fxQuoteBody.conversionTerms.sourceAmount.amount || 300",
+                      "environment.targetAmountValue = fxQuoteBody.conversionTerms.targetAmount.amount || 48000"
+                    ],
+                    "scriptingEngine": "javascript"
+                  }
+                },
+                "type": "FIXED_RESPONSE"
+              },
+              "type": "response",
+              "version": 1
+            },
+            {
+              "ruleId": 7,
+              "priority": 1,
+              "description": "FXP - post /fxTransfers response",
+              "apiVersion": {
+                "minorVersion": 1,
+                "majorVersion": 2,
+                "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
+                "asynchronous": false
+              },
+              "conditions": {
+                "all": [
+                  {
+                    "fact": "operationPath",
+                    "operator": "equal",
+                    "value": "/fxTransfers"
+                  },
+                  {
+                    "fact": "method",
+                    "operator": "equal",
+                    "value": "post"
+                  }
+                ]
+              },
+              "event": {
+                "method": null,
+                "path": null,
+                "params": {
+                  "body": {
+                    "homeTransactionId": "{$request.body.homeTransactionId}",
+                    "completedTimestamp": "{$environment.completedTimestamp}",
+                    "conversionState": "RESERVED"
+                  },
+                  "statusCode": "200",
+                  "scripts": {
+                    "exec": [
+                      "environment.completedTimestamp = new Date().toISOString()"
+                    ],
+                    "scriptingEngine": "javascript"
+                  }
+                },
+                "type": "FIXED_RESPONSE"
+              },
+              "type": "response",
+              "version": 1
+            }
+        ]
+      api_definitions__sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets_2.1__api_spec.yaml: 'https://raw.githubusercontent.com/mojaloop/api-snippets/feat/add-fx-to-sdk/docs/sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets.yaml'
 
   initContainers: []
 

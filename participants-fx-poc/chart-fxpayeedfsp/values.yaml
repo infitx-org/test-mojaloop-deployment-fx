@@ -5,12 +5,12 @@ sdk-scheme-adapter:
 
   ## Local re-usable configs
   config:
-    simName: &CONFIG_PAYEE_NAME payeefsp
+    simName: &CONFIG_PAYEE_NAME payeedfsp
     database: &CONFIG_PAYEE_DB 2
 
   sdk-scheme-adapter-api-svc:
     enabled: true
-    nameOverride: 'payeefsp-sdk-api-svc'
+    nameOverride: 'payeedfsp-sdk-api-svc'
 
     redis:
       database: *CONFIG_PAYEE_DB # This is a number between 0 to 15
@@ -30,7 +30,7 @@ sdk-scheme-adapter:
       apiVersion:
       ## @param ingress.hostname Default host for the ingress record
       ##
-      hostname: payeefsp-sdk-scheme-adapter.local
+      hostname: payeedfsp-sdk-scheme-adapter.local
       ## @param ingress.path Default path for the ingress record
       ## NOTE: You may need to set this to '/*' in order to use this with ALB ingress controllers
       ##
@@ -175,34 +175,166 @@ ml-testing-toolkit:
 
   ml-testing-toolkit-backend:
     enabled: true
-    nameOverride: 'payeefsp-ttk-backend'
+    nameOverride: 'payeedfsp-ttk-backend'
 
     config_files:
       user_config.json:
-        CALLBACK_ENDPOINT: 'http://$release_name-payeefsp-sdk-api-svc:4001'
+        CALLBACK_ENDPOINT: 'http://$release_name-fxpayeedfsp-sdk-api-svc:4001'
       system_config.json: {
         "API_DEFINITIONS": [
           {
-            "type": "mojaloop_simulator_inbound",
-            "version": "1.4",
-            "folderPath": "mojaloop_simulator_sim_1.4",
-            "asynchronous": true
-          },
-          {
-            "type": "scheme_adapter_outbound",
-            "version": "1.0",
-            "folderPath": "mojaloop_sdk_outbound_scheme_adapter_1.0",
+            "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
+            "version": "2.1",
+            "folderPath": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets_2.1",
             "hostnames": [],
-            "prefix": "/sdk-out",
-            "asynchronous": true
+            "asynchronous": false
           }
         ]
       }
-      rules_response__default.json: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.1.1/test/func/config/ttk-payeefsp/spec_files/rules_response/default.json'
-      api_definitions__mojaloop_simulator_sim_1.4__api_spec.yaml: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.1.1/test/func/config/ttk-payeefsp/spec_files/api_definitions/mojaloop_simulator_sim_1.4/api_spec.yaml'
-      api_definitions__mojaloop_simulator_sim_1.4__response_map.json: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.1.1/test/func/config/ttk-payeefsp/spec_files/api_definitions/mojaloop_simulator_sim_1.4/response_map.json'
-      api_definitions__mojaloop_sdk_outbound_scheme_adapter_1.0__api_spec.yaml: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.1.1/test/func/config/ttk-payeefsp/spec_files/api_definitions/mojaloop_sdk_outbound_scheme_adapter_1.0/api_spec.yaml'
-      api_definitions__mojaloop_sdk_outbound_scheme_adapter_1.0__callback_map.json: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.1.1/test/func/config/ttk-payeefsp/spec_files/api_definitions/mojaloop_sdk_outbound_scheme_adapter_1.0/callback_map.json'
+      rules_response__default.json: |-
+        [
+          {
+            "ruleId": 8,
+            "priority": 1,
+            "description": "get /parties/{idType}/{idValue}",
+            "apiVersion": {
+              "minorVersion": 1,
+              "majorVersion": 2,
+              "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
+              "asynchronous": false
+            },
+            "conditions": {
+              "all": [
+                {
+                  "fact": "operationPath",
+                  "operator": "equal",
+                  "value": "/parties/{idType}/{idValue}"
+                },
+                {
+                  "fact": "method",
+                  "operator": "equal",
+                  "value": "get"
+                }
+              ]
+            },
+            "event": {
+              "method": null,
+              "path": null,
+              "params": {
+                "body": {
+                  "dateOfBirth": "1966-06-16",
+                  "displayName": "Yaro",
+                  "firstName": "Yaro",
+                  "fspId": "fxpayeedfsp",
+                  "idType": "MSISDN",
+                  "idValue": "{$request.params.idValue}",
+                  "lastName": "Smith",
+                  "merchantClassificationCode": "1234",
+                  "middleName": "",
+                  "kycInformation": "This is encrypted KYC information"
+                },
+                "statusCode": "200",
+                "scripts": {
+                  "scriptingEngine": "postman"
+                }
+              },
+              "type": "FIXED_RESPONSE"
+            },
+            "type": "response",
+            "version": 1
+          },
+          {
+            "ruleId": 9,
+            "priority": 1,
+            "description": "post /quoterequests",
+            "apiVersion": {
+              "minorVersion": 1,
+              "majorVersion": 2,
+              "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
+              "asynchronous": false
+            },
+            "conditions": {
+              "all": [
+                {
+                  "fact": "operationPath",
+                  "operator": "equal",
+                  "value": "/quoterequests"
+                },
+                {
+                  "fact": "method",
+                  "operator": "equal",
+                  "value": "post"
+                }
+              ]
+            },
+            "event": {
+              "method": null,
+              "path": null,
+              "params": {
+                "body": {
+                  "quoteId": "{$request.body.quoteId}",
+                  "transactionId": "{$request.body.transactionId}",
+                  "transferAmount": "{$request.body.amount}",
+                  "transferAmountCurrency": "{$request.body.currency}"
+                },
+                "statusCode": "200",
+                "scripts": {
+                  "scriptingEngine": "postman"
+                }
+              },
+              "type": "FIXED_RESPONSE"
+            },
+            "type": "response",
+            "version": 1
+          },
+          {
+            "ruleId": 10,
+            "priority": 1,
+            "description": "post /transfers",
+            "apiVersion": {
+              "minorVersion": 1,
+              "majorVersion": 2,
+              "type": "sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets",
+              "asynchronous": false
+            },
+            "conditions": {
+              "all": [
+                {
+                  "fact": "operationPath",
+                  "operator": "equal",
+                  "value": "/transfers"
+                },
+                {
+                  "fact": "method",
+                  "operator": "equal",
+                  "value": "post"
+                }
+              ]
+            },
+            "event": {
+              "method": null,
+              "path": null,
+              "params": {
+                "body": {
+                  "completedTimestamp": "{$environment.completedTimestamp}",
+                  "homeTransactionId": "123",
+                  "transferState": "COMMITTED"
+                },
+                "statusCode": "200",
+                "scripts": {
+                  "exec": [
+                    "environment.completedTimestamp = new Date().toISOString()"
+                  ],
+                  "scriptingEngine": "javascript"
+                }
+              },
+              "type": "FIXED_RESPONSE"
+            },
+            "type": "response",
+            "version": 1
+          }
+        ]
+      api_definitions__sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets_2.1__api_spec.yaml: 'https://raw.githubusercontent.com/mojaloop/api-snippets/feat/add-fx-to-sdk/docs/sdk-scheme-adapter-backend-v2_1_0-openapi3-snippets.yaml'
 
   initContainers: []
 
@@ -222,7 +354,7 @@ ml-testing-toolkit:
 
   ml-testing-toolkit-frontend:
     enabled: true
-    nameOverride: 'payeefsp-ttk-frontend'
+    nameOverride: 'payeedfsp-ttk-frontend'
   #   ingress:
   #     enabled: true
   #     hosts:

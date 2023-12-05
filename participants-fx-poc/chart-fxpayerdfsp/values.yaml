@@ -5,12 +5,12 @@ sdk-scheme-adapter:
 
   ## Local re-usable configs
   config:
-    simName: &CONFIG_PAYER_NAME payerfsp
+    simName: &CONFIG_PAYER_NAME payerdfsp
     database: &CONFIG_PAYER_DB 1
 
   sdk-scheme-adapter-api-svc:
     enabled: true
-    nameOverride: 'payerfsp-sdk-api-svc'
+    nameOverride: 'payerdfsp-sdk-api-svc'
 
     redis:
       database: *CONFIG_PAYER_DB # This is a number between 0 to 15
@@ -30,7 +30,7 @@ sdk-scheme-adapter:
       apiVersion:
       ## @param ingress.hostname Default host for the ingress record
       ##
-      hostname: payerfsp-sdk-scheme-adapter.local
+      hostname: payerdfsp-sdk-scheme-adapter.local
       ## @param ingress.path Default path for the ingress record
       ## NOTE: You may need to set this to '/*' in order to use this with ALB ingress controllers
       ##
@@ -176,11 +176,11 @@ ml-testing-toolkit:
 
   ml-testing-toolkit-backend:
     enabled: true
-    nameOverride: 'payerfsp-ttk-backend'
+    nameOverride: 'payerdfsp-ttk-backend'
 
     config_files:
       user_config.json:
-        CALLBACK_ENDPOINT: 'http://$release_name-payerfsp-sdk-api-svc:4001'
+        CALLBACK_ENDPOINT: 'http://$release_name-fxpayerdfsp-sdk-api-svc:4001'
         SCRIPT_TIMEOUT: 60000
         DEFAULT_REQUEST_TIMEOUT: 60000
         CALLBACK_TIMEOUT: 60000
@@ -189,26 +189,15 @@ ml-testing-toolkit:
       system_config.json: {
         "API_DEFINITIONS": [
           {
-            "type": "mojaloop_simulator_inbound",
-            "version": "1.4",
-            "folderPath": "mojaloop_simulator_sim_1.4",
-            "asynchronous": true
-          },
-          {
-            "type": "scheme_adapter_outbound",
-            "version": "1.0",
-            "folderPath": "mojaloop_sdk_outbound_scheme_adapter_1.0",
+            "type": "sdk-scheme-adapter-outbound-v2_1_0-openapi3-snippets",
+            "version": "2.1",
+            "folderPath": "sdk-scheme-adapter-outbound-v2_1_0-openapi3-snippets_2.1",
             "hostnames": [],
-            "prefix": "/sdk-out",
-            "asynchronous": true
+            "asynchronous": false
           }
         ]
       }
-      rules_response__default.json: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.1.1/test/func/config/ttk-payerfsp/spec_files/rules_response/default.json'
-      api_definitions__mojaloop_simulator_sim_1.4__api_spec.yaml: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.1.1/test/func/config/ttk-payerfsp/spec_files/api_definitions/mojaloop_simulator_sim_1.4/api_spec.yaml'
-      api_definitions__mojaloop_simulator_sim_1.4__response_map.json: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.1.1/test/func/config/ttk-payerfsp/spec_files/api_definitions/mojaloop_simulator_sim_1.4/response_map.json'
-      api_definitions__mojaloop_sdk_outbound_scheme_adapter_1.0__api_spec.yaml: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.1.1/test/func/config/ttk-payerfsp/spec_files/api_definitions/mojaloop_sdk_outbound_scheme_adapter_1.0/api_spec.yaml'
-      api_definitions__mojaloop_sdk_outbound_scheme_adapter_1.0__callback_map.json: 'https://github.com/mojaloop/sdk-scheme-adapter/raw/v23.1.1/test/func/config/ttk-payerfsp/spec_files/api_definitions/mojaloop_sdk_outbound_scheme_adapter_1.0/callback_map.json'
+      api_definitions__sdk-scheme-adapter-outbound-v2_1_0-openapi3-snippets_2.1__api_spec.yaml: 'https://raw.githubusercontent.com/mojaloop/api-snippets/feat/add-fx-to-sdk/docs/sdk-scheme-adapter-outbound-v2_1_0-openapi3-snippets.yaml'
 
     initContainers: []
 
@@ -231,7 +220,7 @@ ml-testing-toolkit:
 
   ml-testing-toolkit-frontend:
     enabled: true
-    nameOverride: 'payerfsp-ttk-frontend'
+    nameOverride: 'payerdfsp-ttk-frontend'
   #   ingress:
   #     enabled: true
   #     hosts:
