@@ -65,9 +65,9 @@ https://docs.mojaloop.io/legacy/deployment-guide/local-setup-linux.html
   helm -n demo test moja
   ```
 - Add the following hostnames to `/etc/hosts` file
-```
-TBD
-```
+  ```
+  127.0.0.1   ml-api-adapter.local central-ledger.local account-lookup-service.local account-lookup-service-admin.local quoting-service.local central-settlement-service.local transaction-request-service.local central-settlement.local bulk-api-adapter.local moja-simulator.local sim-payerfsp.local sim-payeefsp.local sim-testfsp1.local sim-testfsp2.local sim-testfsp3.local sim-testfsp4.local mojaloop-simulators.local finance-portal.local operator-settlement.local settlement-management.local testing-toolkit.local testing-toolkit-specapi.local
+  ```
 
 ### Customize mojaloop values file for FX functionality
 
