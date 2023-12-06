@@ -1126,6 +1126,89 @@
               }
             ]
           }
+        },
+        {
+          "id": 35,
+          "description": "Add participant with target currency - this is a workaround to bypass quoting service validation",
+          "meta": {
+            "info": "Add participant with target currency - this is a workaround to bypass quoting service validation"
+          },
+          "apiVersion": {
+            "minorVersion": 0,
+            "majorVersion": 1,
+            "type": "central_admin"
+          },
+          "operationPath": "/participants",
+          "path": "/participants",
+          "method": "post",
+          "body": {
+            "name": "{$inputs.FX_PAYERDFSP_ID}",
+            "currency": "{$inputs.FX_TARGET_CURRENCY}"
+          },
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "url": "{$inputs.HOST_CENTRAL_LEDGER}",
+          "tests": {
+            "assertions": [
+              {
+                "id": 1,
+                "description": "status to be 201 if not exists or 400 if exists",
+                "exec": [
+                  "if (response.body.errorInformation) {",
+                  "  expect(response.status).to.equal(400)",
+                  "} else {",
+                  "  expect(response.status).to.equal(201)",
+                  "}"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": 36,
+          "description": "Add initial position and limits for target currency - this is a workaround to bypass quoting service validation",
+          "meta": {
+            "info": "Add initial position and limits for target currency - this is a workaround to bypass quoting service validation"
+          },
+          "apiVersion": {
+            "minorVersion": 0,
+            "majorVersion": 1,
+            "type": "central_admin"
+          },
+          "operationPath": "/participants/{name}/initialPositionAndLimits",
+          "path": "/participants/{$inputs.FX_PAYERDFSP_ID}/initialPositionAndLimits",
+          "method": "post",
+          "params": {
+            "name": "{$inputs.FX_PAYERDFSP_ID}"
+          },
+          "body": {
+            "currency": "{$inputs.FX_TARGET_CURRENCY}",
+            "limit": {
+              "type": "NET_DEBIT_CAP",
+              "value": 1000000
+            },
+            "initialPosition": 0
+          },
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "url": "{$inputs.HOST_CENTRAL_LEDGER}",
+          "tests": {
+            "assertions": [
+              {
+                "id": 1,
+                "description": "status to be 201 if not exists or 500 if exists",
+                "exec": [
+                  "if (response.body.errorInformation) {",
+                  "  expect(response.status).to.equal(500)",
+                  "} else {",
+                  "  expect(response.status).to.equal(201)",
+                  "}"
+                ]
+              }
+            ]
+          }
         }
       ],
       "fileInfo": {

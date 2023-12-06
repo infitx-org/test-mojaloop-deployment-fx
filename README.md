@@ -73,6 +73,7 @@ https://docs.mojaloop.io/legacy/deployment-guide/local-setup-linux.html
 
 - Download the default values file of mojaloop chart https://github.com/mojaloop/helm/blob/v15.2.0/mojaloop/values.yaml
 - Change central-ledger version from `v17.3.2` to `v17.4.0-snapshot.10`
+- Change ml-api-adapter version from `v14.0.5` to `v14.1.0-snapshot.5`
 - Upgrade mojaloop with new values file
   ```
   helm --namespace demo upgrade moja mojaloop/mojaloop --version 15.2.0 -f ./test-mojaloop-deployment-fx/values-mojaloop.yaml
