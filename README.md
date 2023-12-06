@@ -98,3 +98,5 @@ TBD
 ### Make a transfer
 - Open http://ttk.fxpayerdfsp.local/admin/outbound_request
 - Load test case `ttk-testcases/tests/transfer.json`
+- Load the environment file `ttk-testcases/default-env.json`
+- Execute the transfer

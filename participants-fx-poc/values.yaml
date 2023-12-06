@@ -13,7 +13,7 @@ config:
   endpointTransfers: &ENDPOINT_TRANSFERS 'moja-ml-api-adapter-service'
   redisHost: &REDIS_HOST 'fx-redis-master'
   redisPort: &REDIS_PORT 6379
-  mojaloopConnectorImageTag: &MOJALOOP_CONNECTOR_IMAGE_TAG v23.2.0-snapshot.2
+  mojaloopConnectorImageTag: &MOJALOOP_CONNECTOR_IMAGE_TAG v23.2.0-snapshot.3
 
 redis:
   enabled: true
