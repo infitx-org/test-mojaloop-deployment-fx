@@ -1,5 +1,9 @@
 ## Mojaloop Switch and Mojaloop Connectorts Deployment on K8S to test FX
 
+### Component Diagram
+
+![Component Diagram](assets/test-scenario-fx-on-k8s.drawio.svg)
+
 ### System configuration
 * Ubuntu 23.04 x86_64
 * AMD Ryzen 9 3900X 12-Core Processor
